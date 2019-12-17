@@ -33,6 +33,10 @@ class EmeEncryptionSchemePolyfill {
    * @export
    */
   static install() {
+    if (EmeEncryptionSchemePolyfill.originalRMKSA_) {
+      console.debug('EmeEncryptionSchemePolyfill: Already installed.');
+      return;
+    }
     if (!navigator.requestMediaKeySystemAccess ||
         !MediaKeySystemAccess.prototype.getConfiguration) {
       console.debug('EmeEncryptionSchemePolyfill: EME not found');
@@ -69,7 +73,7 @@ class EmeEncryptionSchemePolyfill {
     } else if (keySystem.startsWith('org.w3')) {
       return 'cenc';
     } else if (keySystem.startsWith('com.apple')) {
-      return 'cbcs-recommended';
+      return 'cbcs-1-9';
     }
 
     // We don't have this key system in our map!
